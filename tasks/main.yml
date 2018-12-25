@@ -83,6 +83,7 @@
     - {src: '.tmux.conf', dest: "{{home_dir}}/.tmux.conf"}
     - {src: '.zshrc', dest: "{{home_dir}}/.zshrc"}
     - {src: '.vimrc', dest: "{{home_dir}}/.vimrc"}
+    - {src: '.startup', dest: "{{home_dir}}/.startup"}
 
 - name: Add zsh to .bash_history
   lineinfile:

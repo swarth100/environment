@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Workspace 1:
+# Chrome with last session
+sleep 2
+# Set mouse position
+xdotool mousemove 1450 250
+wmctrl -s 1
+./.setwindow "google-chrome --restore-last-session --disable-gpu-compositing" 0 0 100 100
+
+# Workspace 2:
+# Atom
+sleep 2
+wmctrl -s 2
+./.setwindow "atom" 0 0 100 96
+
+# Workspace 0
+# Nautilus
+# Terminal
+# Gnome System Monitor
+sleep 5
+wmctrl -s 0
+./.setwindow "nautilus" -34 0 53 100
+sleep 1
+./.setwindow "gnome-system-monitor -r" 960 540 50 46
+sleep 1
+./.setwindow "gnome-terminal" 960 0 50 46
+
+# Workspace 3:
+# Terminal Full screen
+sleep 2
+wmctrl -s 3
+./.setwindow "gnome-terminal" 0 0 100 93
+
+# Workspace 4:
+# Slack
+sleep 2
+wmctrl -s 4
+./.setwindow "slack" 0 0 100 96
+
+# Go back to workspace 1
+sleep 3
+wmctrl -s 0
