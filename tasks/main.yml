@@ -1,0 +1,99 @@
+#
+# Playbook:: AS_env.yml
+# Description:: Install Alberto environment
+#
+- name: Get the users home directory
+  command: echo $HOME
+  register: home_dir_output
+
+- name: Retrieve the HOME dir
+  set_fact:
+    home_dir: "{{home_dir_output.stdout}}"
+
+- name: Get the users name
+  command: whoami
+  register: username_on_the_host_output
+
+- name: Set the username on the host
+  set_fact:
+    username: "{{username_on_the_host_output.stdout}}"
+
+# Install required packages
+- name: Install required packages
+  become: true
+  become_user: root
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - git
+    - zsh
+    - gcc
+    - make
+    - vim
+    - autoconf
+    - automake
+    - pkgconfig
+    - libX11-devel
+    - libXtst-devel
+    - libXi-devel
+    - setxkbmap
+    - pexpect
+    - libevent-devel
+    - ncurses-devel
+
+- name: Clone xcape repo
+  git: repo=https://github.com/alols/xcape dest=~/xcape force=yes
+
+- name: Build xcape
+  command: chdir=~/xcape make
+
+- name: Install xcape
+  become: true
+  become_user: root
+  command: chdir={{home_dir}}/xcape make install
+
+- name: Clone tmux repo
+  git: repo=https://github.com/tmux/tmux.git dest=~/tmux force=yes
+
+- name: Build tmux
+  command: chdir=~/tmux "{{item}}"
+  with_items:
+    - ./autogen.sh
+    - ./configure
+    - make
+
+- name: Install tmux
+  become: true
+  become_user: root
+  command: chdir={{home_dir}}/tmux make install
+
+- name: Clone tpm repo
+  git: repo=https://github.com/tmux-plugins/tpm.git dest=~/.tmux/plugins/tpm force=yes
+
+- name: Clone oh-my-zsh repo
+  git: repo=https://github.com/robbyrussell/oh-my-zsh dest=~/.oh-my-zsh force=yes
+
+- name: Copy local custom configuration files
+  copy:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+    - {src: 'bullet-train.zsh-theme', dest: "{{home_dir}}/.oh-my-zsh/themes/bullet-train.zsh-theme"}
+    - {src: '.tmux.conf', dest: "{{home_dir}}/.tmux.conf"}
+    - {src: '.zshrc', dest: "{{home_dir}}/.zshrc"}
+    - {src: '.vimrc', dest: "{{home_dir}}/.vimrc"}
+
+- name: Add zsh to .bash_history
+  lineinfile:
+    path: "{{home_dir}}/.bash_profile"
+    insertafter: 'EOF'
+    state: present
+    line: '{{ item }}'
+  with_items:
+    - '# Manual Zsh configuration by Ansible'
+    - 'zsh'
+    - 'export SHELL="/usr/bin/zsh"'
+
+- name: Install tpm updates and reload tmux
+  command: ~/.tmux/plugins/tpm/scripts/install_plugins.sh && tmux kill-server
