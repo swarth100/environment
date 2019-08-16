@@ -574,17 +574,19 @@ prompt_virtualenv() {
 
 # NVM: Node version manager
 prompt_nvm() {
-  local nvm_prompt
-  if type nvm >/dev/null 2>&1; then
-    nvm_prompt=$(nvm current 2>/dev/null)
-    [[ "${nvm_prompt}x" == "x" ]] && return
-  elif type node >/dev/null 2>&1; then
-    nvm_prompt="$(node --version)"
-  else
-    return
-  fi
+  if [[ (-f *.js(#qN)) || -f *.json(#qN) ]]; then
+    local nvm_prompt
+    if type nvm >/dev/null 2>&1; then
+      nvm_prompt=$(nvm current 2>/dev/null)
+      [[ "${nvm_prompt}x" == "x" ]] && return
+    elif type node >/dev/null 2>&1; then
+      nvm_prompt="$(node --version)"
+    else
+      return
+    fi
   nvm_prompt=${nvm_prompt}
   prompt_segment $BULLETTRAIN_NVM_BG $BULLETTRAIN_NVM_FG $BULLETTRAIN_NVM_PREFIX$nvm_prompt
+  fi
 }
 
 #AWS Profile
