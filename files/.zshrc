@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/alberto/.oh-my-zsh
+export ZSH=/Users/alberto/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -58,9 +58,33 @@ ZSH_THEME="bullet-train"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git tmux cp safe-paste nyan colored-man-pages docker last-working-dir npm python systemd web-search)
+plugins=(
+         git 
+         tmux 
+         cp 
+         safe-paste 
+         colored-man-pages 
+         docker 
+         last-working-dir 
+         npm 
+         python 
+         systemd 
+         web-search
+         zsh-syntax-highlighting
+	 zsh-autosuggestions
+	 web-search
+	 extract
+         )
 
 source $ZSH/oh-my-zsh.sh
+
+# Config for zsh-syntax-highlighting
+ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=cyan,underline
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=cyan,underline
+ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
+
+# Adjust autocompletion strategy
+ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd)
 
 # User configuration
 
@@ -128,10 +152,13 @@ bindkey '^r' history-incremental-search-backward
 #zle -N zle-line-init
 #zle -N zle-keymap-select
 
-SCRIPTS=/home/alberto/Documents/Config/scripts
+SCRIPTS=~/Documents/config/scripts
 export SCRIPTS
 PATH=$PATH:$SCRIPTS
 export PATH
+
+# Add OpenVPN to path
+export PATH="/usr/local/Cellar/openvpn/2.4.7/sbin/:$PATH"
 
 export GOPATH="~/Documents/go"
 
@@ -178,6 +205,9 @@ alias cls="ls -l | awk '{k=0;for(i=0;i<=8;i++)k+=((substr(\$1,i+2,1)~/[rwx]/)*2^
 # Init screensaver
 # xscreensaver -no-splash &
 
+# TSIQ specific lookup
+alias dhost='dscacheutil -q host -a name'
+
 # Tmux start
 alias tat='tmux attach-session -t 0'
 
@@ -202,6 +232,7 @@ alias gb='git branch'
 alias gc='git checkout'
 alias gcb='git checkout -b'
 alias gfl="git log --graph --pretty=format:'%C(yellow)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+alias gloc="git log --graph --pretty=format:'%C(yellow)%h%Creset -%C(yellow)%d%Creset %<(65,trunc)%s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 alias glo="gfl"
 alias glf='gfl --stat'
 alias glfo='gfl --stat --oneline'
@@ -228,13 +259,20 @@ bindkey "\C-w" history-beginning-search-backward
 bindkey "\C-q" history-beginning-search-forward
 
 # Remap capslock to ctrl and make it behave like esc when tapped
-setxkbmap -option 'caps:ctrl_modifier'
-xcape -e 'Caps_Lock=Escape;Control_L=Escape;Control_R=Escape'
+#setxkbmap -option 'caps:ctrl_modifier'
+#xcape -e 'Caps_Lock=Escape;Control_L=Escape;Control_R=Escape'
 
 # Spin up NVM (for node)
 export NVM_DIR="$HOME/.nvm"                        
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Override grep options
+export GREP_OPTIONS="--color=auto"
+
+# Remap capslock to ctrl and make it behave like esc when tapped
+setxkbmap -option 'caps:ctrl_modifier'
+xcape -e 'Caps_Lock=Escape;Control_L=Escape;Control_R=Escape'
 
 # Source Bash Profile
 source ~/.bash_profile
