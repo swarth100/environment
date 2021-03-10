@@ -34,9 +34,9 @@ wmctrl -s 3
 
 # Workspace 4:
 # Slack
-sleep 2
-wmctrl -s 4
-./.setwindow "slack" 0 0 100 96
+#sleep 2
+#wmctrl -s 4
+#./.setwindow "slack" 0 0 100 96
 
 # Go back to workspace 1
 sleep 3
